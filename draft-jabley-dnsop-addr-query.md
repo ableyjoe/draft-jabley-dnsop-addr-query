@@ -51,7 +51,7 @@ of addresses from a variety of different address families. Addresses
 are published in RRSETs which have family-specific RRTYPEs. Multiple
 such RRSETs can be published with the same owner name. For example,
 the single owner name EXAMPLE.COM is associated with both an IPv4
-and an IPv6 addresses (see {example}).
+and an IPv6 address (see {{examples}}).
 
 This specification only addresses the case where the two address
 families of interest are IPv4 and IPv6. It is common at the time
@@ -120,12 +120,12 @@ RRSET, e.g. by including a signed NSEC RR in the AUTHORITY section
 of the response that confirms the absence of the missing RRTYPE at
 the QNAME. This follows from (2) above.
 
-## Receiving and Interpreting Responses
+## Receiving and Interpreting ADDR Responses
 
 There are no special requirements for receiving and interpreting
 responses to queries with QTYPE=ADDR.
 
-## Discovering Support for QTYPE=ADDR in Responders
+## Discovering Support for ADDR Queries in Responders
 
 Initiators SHOULD support local configuration that allows support
 for particular responders to be specified based on knowledge of their
@@ -163,8 +163,7 @@ with QTYPE=ADDR, it should be ensured that all origin servers
 associated with the same nameserver address provide consistent
 support.
 
-
-## Example {#example}
+## Examples {#examples}
 
 The following three examples illustrate queries with the same QNAME
 with QTYPEs A, AAAA and ADDR. Each example is provided in the form
@@ -177,78 +176,78 @@ this specification.
 ### Query and Response for (EXAMPLE.COM, IN, A)
 
 ~~~
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+  ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
+    +multiline +dnssec +norec
+  ; (1 server found)
+  ;; global options: +cmd
+  ;; Got answer:
+  ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
+  ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
     
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.		IN A
+  ;; OPT PSEUDOSECTION:
+  ; EDNS: version: 0, flags: do; udp: 4096
+  ;; QUESTION SECTION:
+  ;EXAMPLE.COM.		IN A
 
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN A 93.184.216.34
-    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                         20231028144229 20231008002139 37939 example.com.
-                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+  ;; ANSWER SECTION:
+  EXAMPLE.COM.    86400   IN A 93.184.216.34
+  EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                       20231028144229 20231008002139 37939 example.com.
+                       BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                       gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
 ~~~
 
 ### Query and Response for (EXAMPLE.COM, IN, AAAA)
 
 ~~~
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+  ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
+    +multiline +dnssec +norec
+  ; (1 server found)
+  ;; global options: +cmd
+  ;; Got answer:
+  ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
+  ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
     
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.		IN AAAA
+  ;; OPT PSEUDOSECTION:
+  ; EDNS: version: 0, flags: do; udp: 4096
+  ;; QUESTION SECTION:
+  ;EXAMPLE.COM.		IN AAAA
     
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                         20231027223840 20231007082139 37939 example.com.
-                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+  ;; ANSWER SECTION:
+  EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+  EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                       20231027223840 20231007082139 37939 example.com.
+                       IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                       Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 ~~~
 
 ### Query and Response for (EXAMPLE.COM, IN, ADDR)
 
 ~~~
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+  ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
+    +multiline +dnssec +norec
+  ; (1 server found)
+  ;; global options: +cmd
+  ;; Got answer:
+  ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
+  ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
     
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.		IN ADDR
+  ;; OPT PSEUDOSECTION:
+  ; EDNS: version: 0, flags: do; udp: 4096
+  ;; QUESTION SECTION:
+  ;EXAMPLE.COM.		IN ADDR
     
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN A 93.184.216.34
-    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                         20231028144229 20231008002139 37939 example.com.
-                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
-    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                         20231027223840 20231007082139 37939 example.com.
-                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+  ;; ANSWER SECTION:
+  EXAMPLE.COM.    86400   IN A 93.184.216.34
+  EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                       20231028144229 20231008002139 37939 example.com.
+                       BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                       gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+  EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+  EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                       20231027223840 20231007082139 37939 example.com.
+                       IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                       Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 ~~~
 
 # Security Considerations

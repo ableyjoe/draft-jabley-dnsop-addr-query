@@ -74,9 +74,9 @@ Table of Contents
    3.  The ADDR Query Type . . . . . . . . . . . . . . . . . . . . .   3
      3.1.  Sending ADDR Queries  . . . . . . . . . . . . . . . . . .   3
      3.2.  Constructing and Sending ADDR Responses . . . . . . . . .   3
-     3.3.  Receiving and Interpreting Responses  . . . . . . . . . .   4
-     3.4.  Discovering Support for QTYPE=ADDR in Responders  . . . .   4
-     3.5.  Example . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     3.3.  Receiving and Interpreting ADDR Responses . . . . . . . .   4
+     3.4.  Discovering Support for ADDR Queries in Responders  . . .   4
+     3.5.  Examples  . . . . . . . . . . . . . . . . . . . . . . . .   5
        3.5.1.  Query and Response for (EXAMPLE.COM, IN, A) . . . . .   5
        3.5.2.  Query and Response for (EXAMPLE.COM, IN, AAAA)  . . .   5
        3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)  . . .   6
@@ -96,7 +96,7 @@ Table of Contents
    are published in RRSETs which have family-specific RRTYPEs.  Multiple
    such RRSETs can be published with the same owner name.  For example,
    the single owner name EXAMPLE.COM is associated with both an IPv4 and
-   an IPv6 addresses (see {example}).
+   an IPv6 address (see Section 3.5).
 
    This specification only addresses the case where the two address
    families of interest are IPv4 and IPv6.  It is common at the time of
@@ -184,12 +184,12 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
    the response that confirms the absence of the missing RRTYPE at the
    QNAME.  This follows from (2) above.
 
-3.3.  Receiving and Interpreting Responses
+3.3.  Receiving and Interpreting ADDR Responses
 
    There are no special requirements for receiving and interpreting
    responses to queries with QTYPE=ADDR.
 
-3.4.  Discovering Support for QTYPE=ADDR in Responders
+3.4.  Discovering Support for ADDR Queries in Responders
 
    Initiators SHOULD support local configuration that allows support for
    particular responders to be specified based on knowledge of their
@@ -238,7 +238,7 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
    associated with the same nameserver address provide consistent
    support.
 
-3.5.  Example
+3.5.  Examples
 
    The following three examples illustrate queries with the same QNAME
    with QTYPEs A, AAAA and ADDR.  Each example is provided in the form
@@ -250,25 +250,25 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 3.5.1.  Query and Response for (EXAMPLE.COM, IN, A)
 
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
+     +multiline +dnssec +norec
+   ; (1 server found)
+   ;; global options: +cmd
+   ;; Got answer:
+   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
+   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.               IN A
+   ;; OPT PSEUDOSECTION:
+   ; EDNS: version: 0, flags: do; udp: 4096
+   ;; QUESTION SECTION:
+   ;EXAMPLE.COM.         IN A
 
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN A 93.184.216.34
-    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                         20231028144229 20231008002139 37939 example.com.
-                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+   ;; ANSWER SECTION:
+   EXAMPLE.COM.    86400   IN A 93.184.216.34
+   EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                        20231028144229 20231008002139 37939 example.com.
+                        BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                        gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
 
 3.5.2.  Query and Response for (EXAMPLE.COM, IN, AAAA)
 
@@ -282,52 +282,52 @@ Abley                     Expires 12 April 2024                 [Page 5]
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
+     +multiline +dnssec +norec
+   ; (1 server found)
+   ;; global options: +cmd
+   ;; Got answer:
+   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
+   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.               IN AAAA
+   ;; OPT PSEUDOSECTION:
+   ; EDNS: version: 0, flags: do; udp: 4096
+   ;; QUESTION SECTION:
+   ;EXAMPLE.COM.         IN AAAA
 
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                         20231027223840 20231007082139 37939 example.com.
-                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+   ;; ANSWER SECTION:
+   EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+   EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                        20231027223840 20231007082139 37939 example.com.
+                        IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                        Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
 3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)
 
-    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
-      +multiline +dnssec +norec
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
-    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
+     +multiline +dnssec +norec
+   ; (1 server found)
+   ;; global options: +cmd
+   ;; Got answer:
+   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
+   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags: do; udp: 4096
-    ;; QUESTION SECTION:
-    ;EXAMPLE.COM.               IN ADDR
+   ;; OPT PSEUDOSECTION:
+   ; EDNS: version: 0, flags: do; udp: 4096
+   ;; QUESTION SECTION:
+   ;EXAMPLE.COM.         IN ADDR
 
-    ;; ANSWER SECTION:
-    EXAMPLE.COM.    86400   IN A 93.184.216.34
-    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                         20231028144229 20231008002139 37939 example.com.
-                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
-    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                         20231027223840 20231007082139 37939 example.com.
-                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+   ;; ANSWER SECTION:
+   EXAMPLE.COM.    86400   IN A 93.184.216.34
+   EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                        20231028144229 20231008002139 37939 example.com.
+                        BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                        gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+   EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+   EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                        20231027223840 20231007082139 37939 example.com.
+                        IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                        Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
 
 
