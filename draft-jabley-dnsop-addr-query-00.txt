@@ -82,11 +82,11 @@ Table of Contents
        3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)  . . .   6
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   6.  Template  . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   Appendix A.  RRTYPE Allocation Template . . . . . . . . . . . . .   9
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
@@ -250,25 +250,25 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 3.5.1.  Query and Response for (EXAMPLE.COM, IN, A)
 
-   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
-     +multiline +dnssec +norec
-   ; (1 server found)
-   ;; global options: +cmd
-   ;; Got answer:
-   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
-   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
+      +multiline +dnssec +norec
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4055
+    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-   ;; OPT PSEUDOSECTION:
-   ; EDNS: version: 0, flags: do; udp: 4096
-   ;; QUESTION SECTION:
-   ;EXAMPLE.COM.               IN A
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags: do; udp: 4096
+    ;; QUESTION SECTION:
+    ;EXAMPLE.COM.               IN A
 
-   ;; ANSWER SECTION:
-   EXAMPLE.COM.    86400   IN A 93.184.216.34
-   EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                        20231028144229 20231008002139 37939 example.com.
-                        BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                        gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+    ;; ANSWER SECTION:
+    EXAMPLE.COM.    86400   IN A 93.184.216.34
+    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                         20231028144229 20231008002139 37939 example.com.
+                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
 
 3.5.2.  Query and Response for (EXAMPLE.COM, IN, AAAA)
 
@@ -282,52 +282,52 @@ Abley                     Expires 12 April 2024                 [Page 5]
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 
-   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
-     +multiline +dnssec +norec
-   ; (1 server found)
-   ;; global options: +cmd
-   ;; Got answer:
-   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
-   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
+      +multiline +dnssec +norec
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15495
+    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-   ;; OPT PSEUDOSECTION:
-   ; EDNS: version: 0, flags: do; udp: 4096
-   ;; QUESTION SECTION:
-   ;EXAMPLE.COM.               IN AAAA
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags: do; udp: 4096
+    ;; QUESTION SECTION:
+    ;EXAMPLE.COM.               IN AAAA
 
-   ;; ANSWER SECTION:
-   EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-   EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                        20231027223840 20231007082139 37939 example.com.
-                        IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                        Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+    ;; ANSWER SECTION:
+    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                         20231027223840 20231007082139 37939 example.com.
+                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
 3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)
 
-   ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
-     +multiline +dnssec +norec
-   ; (1 server found)
-   ;; global options: +cmd
-   ;; Got answer:
-   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
-   ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
+      +multiline +dnssec +norec
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28915
+    ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-   ;; OPT PSEUDOSECTION:
-   ; EDNS: version: 0, flags: do; udp: 4096
-   ;; QUESTION SECTION:
-   ;EXAMPLE.COM.               IN ADDR
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags: do; udp: 4096
+    ;; QUESTION SECTION:
+    ;EXAMPLE.COM.               IN ADDR
 
-   ;; ANSWER SECTION:
-   EXAMPLE.COM.    86400   IN A 93.184.216.34
-   EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
-                        20231028144229 20231008002139 37939 example.com.
-                        BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
-                        gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
-   EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
-   EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
-                        20231027223840 20231007082139 37939 example.com.
-                        IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
-                        Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+    ;; ANSWER SECTION:
+    EXAMPLE.COM.    86400   IN A 93.184.216.34
+    EXAMPLE.COM.    86400   IN RRSIG A 13 2 86400 (
+                         20231028144229 20231008002139 37939 example.com.
+                         BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
+                         gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+    EXAMPLE.COM.    86400   IN AAAA 2606:2800:220:1:248:1893:25c8:1946
+    EXAMPLE.COM.    86400   IN RRSIG AAAA 13 2 86400 (
+                         20231027223840 20231007082139 37939 example.com.
+                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
+                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
 
 
@@ -371,21 +371,21 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
    TYPEs" [RFC6895] and recorded it in the Resource Record (RR) TYPEs
    sub-registry of the DNS Parameters registry as follows:
 
-   +======+=======+===============+===============+===================+
-   | TYPE | Value | Reference     | Template      | Registration Date |
-   +======+=======+===============+===============+===================+
-   | TBA1 | ADDR  | This document | See Section 6 | As appropriate    |
-   +------+-------+---------------+---------------+-------------------+
+   +======+=======+===============+================+===================+
+   | TYPE | Value | Reference     | Template       | Registration Date |
+   +======+=======+===============+================+===================+
+   | TBA1 | ADDR  | This document | See            | As appropriate    |
+   |      |       |               | Appendix A     |                   |
+   +------+-------+---------------+----------------+-------------------+
 
-                                 Table 1
+                                  Table 1
 
    The IANA has updated the "iana-dns-class-rr-type" YANG Module to
    reflect this registration, as described in [RFC9108].
 
-6.  Template
 
-   The following template was submitted to request assignment of a code-
-   point for the ADDR RRTYPE as described in this document.
+
+
 
 
 
@@ -394,78 +394,7 @@ Abley                     Expires 12 April 2024                 [Page 7]
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 
-   A. Submission Date:  (date of this document)
-
-   B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
-   B.2 Kind of RR:  [ ] Data RR  [X]  Meta-RR
-
-      Assignment of a QTYPE from the range of code-points reserved
-      for "Q and Meta-TYPEs" is requested; see RFC6895 section
-      3.1.1.
-
-   C. Contact Information for submitter (will be publicly posted):
-
-      The author contact information for this document may be used
-      as the contact information for this template.
-
-   D. Motivation for the new RRTYPE application
-      Please keep this part at a high level to inform the Expert
-      and reviewers about uses of the RRTYPE.  Most reviewers will
-      be DNS experts that may have limited knowledge of your
-      application space.
-
-      See (this document).
-
-   E. Description of the proposed RR type.
-      This description can be provided in-line in the template,
-      as an attachment, or with a publicly available URL.
-
-      See (this document).
-
-   F. What existing RRTYPE or RRTYPEs come closest to filling that need
-      and why are they unsatisfactory?
-
-      The RRTYPEs A and AAAA provide a means of publishing IPv4
-      and IPv6 addresses in the DNS. However, in order to obtain
-      all IPv4 and IPv6 addresses for a particular owner name, two
-      queries are required.  This specification allows the same
-      functionality with a single query.
-
-      The RRTYPE ANY (referred to as * in RFC 1035) provides a
-      means of obtaining all RRTYPEs associated with a single owner
-      name in a single query. However, queries with QTYPE=ANY
-      provide unacceptable amplification potential for some operators
-      and in many cases their use has been curtailed, e.g. see
-      RFC 8482.
-
-   G. What mnemonic is requested for the new RRTYPE (optional)?
-
-      ADDR
-
-
-
-
-Abley                     Expires 12 April 2024                 [Page 8]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
-
-   H. Does the requested RRTYPE make use of any existing IANA registry
-      or require the creation of a new IANA subregistry in DNS
-      Parameters?  If so, please indicate which registry is to be
-      used or created.  If a new subregistry is needed, specify
-      the allocation policy for it and its initial contents.  Also
-      include what the modification procedures will be.
-
-      No.
-
-   I. Does the proposal require/expect any changes in DNS
-      servers/resolvers that prevent the new type from being
-      processed as an unknown RRTYPE (see RFC3597)?
-
-      No.
-
-7.  Acknowledgements
+6.  Acknowledgements
 
    This is not the first attempt to specify some kind of multi-QTYPEs
    functionality.  The bravery and foolish optimism of all those that
@@ -473,12 +402,12 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
    An early implementation of this mechanism was implemented in
    authoritative-only DNS servers by Olafur Gudmundsson, Christian
-   Elmerot and Pavel Odintsov at Cloudflare in 2016, using the private-
-   use code-point 65535 for ADDR.
+   Elmerot and Pavel Odintsov at Cloudflare starting around 2016, using
+   the private-use code-point 65535 for ADDR.
 
-8.  References
+7.  References
 
-8.1.  Normative References
+7.1.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
@@ -497,15 +426,6 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
               Considerations", BCP 42, RFC 6895, DOI 10.17487/RFC6895,
               April 2013, <https://www.rfc-editor.org/info/rfc6895>.
 
-
-
-
-
-Abley                     Expires 12 April 2024                 [Page 9]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -518,7 +438,17 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
               Resource Record Types", RFC 9108, DOI 10.17487/RFC9108,
               September 2021, <https://www.rfc-editor.org/info/rfc9108>.
 
-8.2.  Informative References
+7.2.  Informative References
+
+
+
+
+
+
+Abley                     Expires 12 April 2024                 [Page 8]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
 
    [RFC4786]  Abley, J. and K. Lindqvist, "Operation of Anycast
               Services", BCP 126, RFC 4786, DOI 10.17487/RFC4786,
@@ -533,6 +463,86 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
               Have QTYPE=ANY", RFC 8482, DOI 10.17487/RFC8482, January
               2019, <https://www.rfc-editor.org/info/rfc8482>.
 
+Appendix A.  RRTYPE Allocation Template
+
+                 DNS RRTYPE PARAMETER ALLOCATION TEMPLATE
+
+   When ready for formal consideration, this template is to be submitted
+   to IANA for processing by emailing the template to dns-rrtype-
+   applications@ietf.org.
+
+   A. Submission Date: 2023-10-10
+
+   B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
+   B.2 Kind of RR:  [ ] Data RR  [X] Meta-RR
+
+   C. Contact Information for submitter (will be publicly posted):
+      Name: Joe Abley                  Email Address: jabley@cloudflare.com
+      International telephone number: +31 6 45 56 36 34
+      Other contact handles:
+
+   D. Motivation for the new RRTYPE application.
+      Please keep this part at a high level to inform the Expert and
+      reviewers about uses of the RRTYPE.  Most reviewers will be DNS
+      experts that may have limited knowledge of your application space.
+
+      See draft-jabley-dnsop-addr-query-00 section 1.
+
+   E. Description of the proposed RR type.
+      This description can be provided in-line in the template, as an
+      attachment, or with a publicly available URL.
+
+      See draft-jabley-dnsop-addr-query-00 section 3.
+
+   F. What existing RRTYPE or RRTYPEs come closest to filling that need
+      and why are they unsatisfactory?
+
+      The RRTYPEs A and AAAA provide a means of publishing IPv4
+
+
+
+Abley                     Expires 12 April 2024                 [Page 9]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
+
+      and IPv6 addresses in the DNS. However, in order to obtain
+      all IPv4 and IPv6 addresses for a particular owner name, two
+      queries are required.  This specification allows the same
+      functionality with a single query.
+
+      The RRTYPE ANY (referred to as * in RFC 1035) provides a
+      means of obtaining all RRTYPEs associated with a single owner
+      name in a single query. However, queries with QTYPE=ANY
+      provide unacceptable amplification potential for some operators
+      and in many cases their use has been curtailed, e.g. see
+      RFC 8482.
+
+   G. What mnemonic is requested for the new RRTYPE (optional)?
+
+      Note: If a mnemonic is not supplied, not allowed, or duplicates an
+      existing RRTYPE or CLASS mnemonic, the Expert will assign a
+      mnemonic.
+
+      ADDR
+
+   H. Does the requested RRTYPE make use of any existing IANA registry
+      or require the creation of a new IANA subregistry in DNS
+      Parameters?  If so, please indicate which registry is to be used
+      or created.  If a new subregistry is needed, specify the
+      allocation policy for it and its initial contents.  Also include
+      what the modification procedures will be.
+
+      No.
+
+   I. Does the proposal require/expect any changes in DNS
+      servers/resolvers that prevent the new type from being processed
+      as an unknown RRTYPE (see [RFC3597])?
+
+      No.
+
+   J. Comments:
+
 Author's Address
 
    Joe Abley
@@ -541,16 +551,6 @@ Author's Address
    Netherlands
    Phone: +31 6 45 56 36 34
    Email: jabley@cloudflare.com
-
-
-
-
-
-
-
-
-
-
 
 
 

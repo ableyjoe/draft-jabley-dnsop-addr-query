@@ -176,6 +176,7 @@ this specification.
 
 ### Query and Response for (EXAMPLE.COM, IN, A)
 
+~~~
     ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
       +multiline +dnssec +norec
     ; (1 server found)
@@ -195,9 +196,11 @@ this specification.
                          20231028144229 20231008002139 37939 example.com.
                          BfSk6wqpibs9a4AUa8gXHFzhBGiO9f0QuFLVaMYkPu0P
                          gKrDUl94VEfWlJ5pOMalgL1RzFwngd51b3FFiLUp3g== )
+~~~
 
 ### Query and Response for (EXAMPLE.COM, IN, AAAA)
 
+~~~
     ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
       +multiline +dnssec +norec
     ; (1 server found)
@@ -217,9 +220,11 @@ this specification.
                          20231027223840 20231007082139 37939 example.com.
                          IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
                          Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+~~~
 
 ### Query and Response for (EXAMPLE.COM, IN, ADDR)
 
+~~~
     ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
       +multiline +dnssec +norec
     ; (1 server found)
@@ -244,6 +249,7 @@ this specification.
                          20231027223840 20231007082139 37939 example.com.
                          IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
                          Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
+~~~
 
 # Security Considerations
 
@@ -284,74 +290,6 @@ sub-registry of the DNS Parameters registry as follows:
 The IANA has updated the "iana-dns-class-rr-type" YANG Module
 to reflect this registration, as described in {{!RFC9108}}.
 
-# Template
-
-The following template was submitted to request assignment of a
-code-point for the ADDR RRTYPE as described in this document.
-
-    A. Submission Date:  (date of this document)
-    
-    B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
-    B.2 Kind of RR:  [ ] Data RR  [X]  Meta-RR
-    
-       Assignment of a QTYPE from the range of code-points reserved
-       for "Q and Meta-TYPEs" is requested; see RFC6895 section
-       3.1.1.
-
-    C. Contact Information for submitter (will be publicly posted):
-
-       The author contact information for this document may be used
-       as the contact information for this template.
-
-    D. Motivation for the new RRTYPE application
-       Please keep this part at a high level to inform the Expert
-       and reviewers about uses of the RRTYPE.  Most reviewers will
-       be DNS experts that may have limited knowledge of your
-       application space.
-
-       See (this document).
-
-    E. Description of the proposed RR type.
-       This description can be provided in-line in the template,
-       as an attachment, or with a publicly available URL.
-
-       See (this document).
-
-    F. What existing RRTYPE or RRTYPEs come closest to filling that need
-       and why are they unsatisfactory?
-
-       The RRTYPEs A and AAAA provide a means of publishing IPv4
-       and IPv6 addresses in the DNS. However, in order to obtain
-       all IPv4 and IPv6 addresses for a particular owner name, two
-       queries are required.  This specification allows the same
-       functionality with a single query.
-
-       The RRTYPE ANY (referred to as * in RFC 1035) provides a
-       means of obtaining all RRTYPEs associated with a single owner
-       name in a single query. However, queries with QTYPE=ANY
-       provide unacceptable amplification potential for some operators
-       and in many cases their use has been curtailed, e.g. see
-       RFC 8482.
-
-    G. What mnemonic is requested for the new RRTYPE (optional)?
-
-       ADDR
-
-    H. Does the requested RRTYPE make use of any existing IANA registry
-       or require the creation of a new IANA subregistry in DNS
-       Parameters?  If so, please indicate which registry is to be
-       used or created.  If a new subregistry is needed, specify
-       the allocation policy for it and its initial contents.  Also
-       include what the modification procedures will be.
-
-       No.
-
-    I. Does the proposal require/expect any changes in DNS
-       servers/resolvers that prevent the new type from being
-       processed as an unknown RRTYPE (see RFC3597)?
-
-       No.
-
 # Acknowledgements
 
 This is not the first attempt to specify some kind of multi-QTYPEs
@@ -360,9 +298,82 @@ came before is hereby acknowledged.
 
 An early implementation of this mechanism was implemented in
 authoritative-only DNS servers by Olafur Gudmundsson, Christian
-Elmerot and Pavel Odintsov  at Cloudflare in 2016, using the
-private-use code-point 65535 for ADDR.
+Elmerot and Pavel Odintsov  at Cloudflare starting around 2016,
+using the private-use code-point 65535 for ADDR.
 
 --- back
 
+# RRTYPE Allocation Template {#template}
+
+~~~
+                 DNS RRTYPE PARAMETER ALLOCATION TEMPLATE
+   
+   When ready for formal consideration, this template is to be submitted
+   to IANA for processing by emailing the template to dns-rrtype-
+   applications@ietf.org.
+   
+   A. Submission Date: 2023-10-10
+   
+   B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
+   B.2 Kind of RR:  [ ] Data RR  [X] Meta-RR
+   
+   C. Contact Information for submitter (will be publicly posted):
+      Name: Joe Abley                  Email Address: jabley@cloudflare.com
+      International telephone number: +31 6 45 56 36 34
+      Other contact handles:
+   
+   D. Motivation for the new RRTYPE application.
+      Please keep this part at a high level to inform the Expert and
+      reviewers about uses of the RRTYPE.  Most reviewers will be DNS
+      experts that may have limited knowledge of your application space.
+   
+      See draft-jabley-dnsop-addr-query-00 section 1.
+   
+   E. Description of the proposed RR type.
+      This description can be provided in-line in the template, as an
+      attachment, or with a publicly available URL.
+   
+      See draft-jabley-dnsop-addr-query-00 section 3.
+   
+   F. What existing RRTYPE or RRTYPEs come closest to filling that need
+      and why are they unsatisfactory?
+   
+      The RRTYPEs A and AAAA provide a means of publishing IPv4
+      and IPv6 addresses in the DNS. However, in order to obtain
+      all IPv4 and IPv6 addresses for a particular owner name, two
+      queries are required.  This specification allows the same
+      functionality with a single query.
+   
+      The RRTYPE ANY (referred to as * in RFC 1035) provides a
+      means of obtaining all RRTYPEs associated with a single owner
+      name in a single query. However, queries with QTYPE=ANY
+      provide unacceptable amplification potential for some operators
+      and in many cases their use has been curtailed, e.g. see
+      RFC 8482.
+   
+   G. What mnemonic is requested for the new RRTYPE (optional)?
+   
+      Note: If a mnemonic is not supplied, not allowed, or duplicates an
+      existing RRTYPE or CLASS mnemonic, the Expert will assign a
+      mnemonic.
+   
+      ADDR
+   
+   H. Does the requested RRTYPE make use of any existing IANA registry
+      or require the creation of a new IANA subregistry in DNS
+      Parameters?  If so, please indicate which registry is to be used
+      or created.  If a new subregistry is needed, specify the
+      allocation policy for it and its initial contents.  Also include
+      what the modification procedures will be.
+   
+      No.
+   
+   I. Does the proposal require/expect any changes in DNS
+      servers/resolvers that prevent the new type from being processed
+      as an unknown RRTYPE (see [RFC3597])?
+   
+      No.
+   
+   J. Comments:
+~~~
 
