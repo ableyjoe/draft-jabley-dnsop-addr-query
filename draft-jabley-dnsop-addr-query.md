@@ -51,7 +51,7 @@ of addresses from a variety of different address families. Addresses
 are published in RRSETs which have family-specific RRTYPEs. Multiple
 such RRSETs can be published with the same owner name. For example,
 the single owner name EXAMPLE.COM is associated with both an IPv4
-and an IPv6 addreses (see {example}).
+and an IPv6 addresses (see {example}).
 
 This specification only addresses the case where the two address
 families of interest are IPv4 and IPv6. It is common at the time
@@ -106,33 +106,62 @@ generated for QTYPE=A and QTYPE=AAAA;
 including the use and interpretation of the DNS message header section
 flags and EDNS(0) OPT meta-RR header.
 
-Behaviour is intended to match handling for queries with QTYPE=ANY
-(referred to as QTYPE=* in {{!RFC1034}}). In particular, a responder
-that is not authoritative for the zone containing the QNAME MAY
-choose only to include data in the response that is available in a
-local cache; initiating additional queries to obtain data that is
-not cached locally in order to construct a response is OPTIONAL.
+A responder that is not authoritative for the zone containing the
+QNAME (e.g.  a responder acting as a recursive resolver) that is
+not able to construct a response exclusively from cached records
+MUST send upstream queries in order for its response to be complete,
+just as it would when responding to queries with QTYPE=A or QTYPE=AAAA
+that could not be satisfied from the cache.
+
+Where an owner name has either associated A or AAAA RRSETS but not
+both and a query has requested a secure response with DO=1, the
+response MUST include the proof of the non-existence of the missing
+RRSET, e.g. by including a signed NSEC RR in the AUTHORITY section
+of the response that confirms the absence of the missing RRTYPE at
+the QNAME. This follows from (2) above.
 
 ## Receiving and Interpreting Responses
 
 There are no special requirements for receiving and interpreting
 responses to queries with QTYPE=ADDR.
 
-## Determining Support for Queries with QTYPE=ADDR
+## Discovering Support for QTYPE=ADDR in Responders
 
-Initiators MAY choose to send test queries with QTYPE=ADDR to
-particular nameservers in order to determine whether the corresponding
-functionality is available, and may record what it finds out in a
-local cache in order to determine whether subsequently to initiate
-queries with QTYPE=ADDR or to initiate queries with QTYPE=A and
-QTYPE=AAAA.
+Initiators SHOULD support local configuration that allows support
+for particular responders to be specified based on knowledge of their
+capabilities, for example where the initiator and responder are part
+of a larger system and maintained by a common operator.
 
-Nameservers are often provisioned in a distributed manner, e.g.
-using anycast {{?RFC4786}} where multiple, autonomous origin servers
-handle queries equivalently using the same nameserver address. Where
-such nameservers are configured to support queries with QTYPE=ADDR,
-it should be ensured that all origin servers associated with the
-same nameserver address provide consistent support.
+Initiators MAY also implement a discovery mechanism that allows
+support in responders about which there is no local policy to be
+inferred.  The following mechanism is provided as an illustration
+of a possible mechanism that could be used. Implementors MAY use
+different mechanisms.
+
+1. An initiator maintains a cache of capabilities for DNS responders.
+At startup this cache is empty.
+1. An initiator of a query for QTYPE=A or QTYPE=AAAA to a responder
+that is known from the cache to be capable uses QTYPE=ADDR to send
+the upstream query.
+1. If the capabilities of the responder are not known from the
+cache, the initiator sends both QTYPE=A and QTYPE=AAAA and, in
+parallel, QTYPE=ADDR. If all three queries generate responses and
+the responses are compatible, the initiator adds the responder
+address and a timestamp to the cache.
+1. A responder included in the cache with a timestamp that is too
+old to be considered current will no longer be considered current,
+and the discovery mechanism should be repeated. The threshold
+beyond which an entry should no longer be considered current is
+a matter of local policy, and may be refined over time following
+observation of caches in real-world operation.
+
+Nameservers (responders) are often provisioned in a distributed
+manner, e.g.  using anycast {{?RFC4786}} where multiple, autonomous
+origin servers handle queries equivalently using the same nameserver
+address. Where such nameservers are configured to support queries
+with QTYPE=ADDR, it should be ensured that all origin servers
+associated with the same nameserver address provide consistent
+support.
 
 
 ## Example {#example}
@@ -243,9 +272,10 @@ potential of this specification can simply choose not to implement it.
 
 # IANA Considerations
 
-The IANA has allocated the code point TBA1 for QTYPE ADDR and recorded
-it in the Resource Record (RR) TYPEs sub-registry of the DNS Parameters
-registry as follows:
+The IANA has allocated the code point TBA1 for QTYPE ADDR from the
+range of available code-points designated for use by "Q and Meta-TYPEs"
+{{!RFC6895}} and recorded it in the Resource Record (RR) TYPEs
+sub-registry of the DNS Parameters registry as follows:
 
 | TYPE  | Value  | Reference      | Template          | Registration Date  |
 | ---   | ---    | ---            |                   |                    |
@@ -256,73 +286,82 @@ to reflect this registration, as described in {{!RFC9108}}.
 
 # Template
 
-The following template was submitted to request support of RRTYPE TBA1
-as described in this document.
+The following template was submitted to request assignment of a
+code-point for the ADDR RRTYPE as described in this document.
 
-A. Submission Date:  (date of this document)
+    A. Submission Date:  (date of this document)
+    
+    B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
+    B.2 Kind of RR:  [ ] Data RR  [X]  Meta-RR
+    
+       Assignment of a QTYPE from the range of code-points reserved
+       for "Q and Meta-TYPEs" is requested; see RFC6895 section
+       3.1.1.
 
-B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
-B.2 Kind of RR:  [ ] Data RR  [X]  Meta-RR
+    C. Contact Information for submitter (will be publicly posted):
 
-   Assignment of a QTYPE from the range of code-points reserved for
-   "Q and Meta-TYPEs" is requested; see {{!RFC6895}} section 3.1.1.
+       The author contact information for this document may be used
+       as the contact information for this template.
 
-C. Contact Information for submitter (will be publicly posted):
+    D. Motivation for the new RRTYPE application
+       Please keep this part at a high level to inform the Expert
+       and reviewers about uses of the RRTYPE.  Most reviewers will
+       be DNS experts that may have limited knowledge of your
+       application space.
 
-   The author contact information for this document may be used as
-   the contact information for this template.
+       See (this document).
 
-D. Motivation for the new RRTYPE application
-   Please keep this part at a high level to inform the Expert and
-   reviewers about uses of the RRTYPE.  Most reviewers will be DNS
-   experts that may have limited knowledge of your application space.
+    E. Description of the proposed RR type.
+       This description can be provided in-line in the template,
+       as an attachment, or with a publicly available URL.
 
-   See {{motivation}}.
+       See (this document).
 
-E. Description of the proposed RR type.
-   This description can be provided in-line in the template, as an
-   attachment, or with a publicly available URL.
+    F. What existing RRTYPE or RRTYPEs come closest to filling that need
+       and why are they unsatisfactory?
 
-   See {{specification}}.
+       The RRTYPEs A and AAAA provide a means of publishing IPv4
+       and IPv6 addresses in the DNS. However, in order to obtain
+       all IPv4 and IPv6 addresses for a particular owner name, two
+       queries are required.  This specification allows the same
+       functionality with a single query.
 
-F. What existing RRTYPE or RRTYPEs come closest to filling that need
-   and why are they unsatisfactory?
+       The RRTYPE ANY (referred to as * in RFC 1035) provides a
+       means of obtaining all RRTYPEs associated with a single owner
+       name in a single query. However, queries with QTYPE=ANY
+       provide unacceptable amplification potential for some operators
+       and in many cases their use has been curtailed, e.g. see
+       RFC 8482.
 
-   The RRTYPEs A and AAAA provide a means of publishing IPv4 and
-   IPv6 addresses in the DNS. However, in order to obtain all IPv4
-   and IPv6 addresses for a particular owner name, two queries are
-   required.  This specification allows the same functionality with
-   a single query.
+    G. What mnemonic is requested for the new RRTYPE (optional)?
 
-   The RRTYPE ANY (referred to as * in {{!RFC1035}} provide a means
-   of obtaining all RRTYPEs associated with a single owner name in
-   a single query. However, queries with QTYPE=ANY provide unacceptable
-   amplification potential for some operators and in many cases
-   their use has been curtailed, e.g. see {{?RFC8482}}.
+       ADDR
 
-G. What mnemonic is requested for the new RRTYPE (optional)?
+    H. Does the requested RRTYPE make use of any existing IANA registry
+       or require the creation of a new IANA subregistry in DNS
+       Parameters?  If so, please indicate which registry is to be
+       used or created.  If a new subregistry is needed, specify
+       the allocation policy for it and its initial contents.  Also
+       include what the modification procedures will be.
 
-   ADDR
+       No.
 
-H. Does the requested RRTYPE make use of any existing IANA registry
-   or require the creation of a new IANA subregistry in DNS
-   Parameters?  If so, please indicate which registry is to be used
-   or created.  If a new subregistry is needed, specify the
-   allocation policy for it and its initial contents.  Also include
-   what the modification procedures will be.
+    I. Does the proposal require/expect any changes in DNS
+       servers/resolvers that prevent the new type from being
+       processed as an unknown RRTYPE (see RFC3597)?
 
-   No.
-
-I. Does the proposal require/expect any changes in DNS
-   servers/resolvers that prevent the new type from being processed
-   as an unknown RRTYPE (see {{!RFC3597}}?
-
-   Yes.
+       No.
 
 # Acknowledgements
 
-An early implementation of this mechanism was implemented at Cloudflare
-by XXXNAMES in XXDATE.
+This is not the first attempt to specify some kind of multi-QTYPEs
+functionality. The bravery and foolish optimism of all those that
+came before is hereby acknowledged.
+
+An early implementation of this mechanism was implemented in
+authoritative-only DNS servers by Olafur Gudmundsson, Christian
+Elmerot and Pavel Odintsov  at Cloudflare in 2016, using the
+private-use code-point 65535 for ADDR.
 
 --- back
 

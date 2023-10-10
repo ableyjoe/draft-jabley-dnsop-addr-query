@@ -75,18 +75,18 @@ Table of Contents
      3.1.  Sending ADDR Queries  . . . . . . . . . . . . . . . . . .   3
      3.2.  Constructing and Sending ADDR Responses . . . . . . . . .   3
      3.3.  Receiving and Interpreting Responses  . . . . . . . . . .   4
-     3.4.  Determining Support for Queries with QTYPE=ADDR . . . . .   4
-     3.5.  Example . . . . . . . . . . . . . . . . . . . . . . . . .   4
-       3.5.1.  Query and Response for (EXAMPLE.COM, IN, A) . . . . .   4
+     3.4.  Discovering Support for QTYPE=ADDR in Responders  . . . .   4
+     3.5.  Example . . . . . . . . . . . . . . . . . . . . . . . . .   5
+       3.5.1.  Query and Response for (EXAMPLE.COM, IN, A) . . . . .   5
        3.5.2.  Query and Response for (EXAMPLE.COM, IN, AAAA)  . . .   5
-       3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)  . . .   5
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+       3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)  . . .   6
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    6.  Template  . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
@@ -96,7 +96,7 @@ Table of Contents
    are published in RRSETs which have family-specific RRTYPEs.  Multiple
    such RRSETs can be published with the same owner name.  For example,
    the single owner name EXAMPLE.COM is associated with both an IPv4 and
-   an IPv6 addreses (see {example}).
+   an IPv6 addresses (see {example}).
 
    This specification only addresses the case where the two address
    families of interest are IPv4 and IPv6.  It is common at the time of
@@ -170,33 +170,73 @@ Abley                     Expires 12 April 2024                 [Page 3]
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 
-   Behaviour is intended to match handling for queries with QTYPE=ANY
-   (referred to as QTYPE=* in [RFC1034]).  In particular, a responder
-   that is not authoritative for the zone containing the QNAME MAY
-   choose only to include data in the response that is available in a
-   local cache; initiating additional queries to obtain data that is not
-   cached locally in order to construct a response is OPTIONAL.
+   A responder that is not authoritative for the zone containing the
+   QNAME (e.g.  a responder acting as a recursive resolver) that is not
+   able to construct a response exclusively from cached records MUST
+   send upstream queries in order for its response to be complete, just
+   as it would when responding to queries with QTYPE=A or QTYPE=AAAA
+   that could not be satisfied from the cache.
+
+   Where an owner name has either associated A or AAAA RRSETS but not
+   both and a query has requested a secure response with DO=1, the
+   response MUST include the proof of the non-existence of the missing
+   RRSET, e.g. by including a signed NSEC RR in the AUTHORITY section of
+   the response that confirms the absence of the missing RRTYPE at the
+   QNAME.  This follows from (2) above.
 
 3.3.  Receiving and Interpreting Responses
 
    There are no special requirements for receiving and interpreting
    responses to queries with QTYPE=ADDR.
 
-3.4.  Determining Support for Queries with QTYPE=ADDR
+3.4.  Discovering Support for QTYPE=ADDR in Responders
 
-   Initiators MAY choose to send test queries with QTYPE=ADDR to
-   particular nameservers in order to determine whether the
-   corresponding functionality is available, and may record what it
-   finds out in a local cache in order to determine whether subsequently
-   to initiate queries with QTYPE=ADDR or to initiate queries with
-   QTYPE=A and QTYPE=AAAA.
+   Initiators SHOULD support local configuration that allows support for
+   particular responders to be specified based on knowledge of their
+   capabilities, for example where the initiator and responder are part
+   of a larger system and maintained by a common operator.
 
-   Nameservers are often provisioned in a distributed manner, e.g. using
-   anycast [RFC4786] where multiple, autonomous origin servers handle
-   queries equivalently using the same nameserver address.  Where such
-   nameservers are configured to support queries with QTYPE=ADDR, it
-   should be ensured that all origin servers associated with the same
-   nameserver address provide consistent support.
+   Initiators MAY also implement a discovery mechanism that allows
+   support in responders about which there is no local policy to be
+   inferred.  The following mechanism is provided as an illustration of
+   a possible mechanism that could be used.  Implementors MAY use
+   different mechanisms.
+
+   1.  An initiator maintains a cache of capabilities for DNS
+       responders.  At startup this cache is empty.
+
+   2.  An initiator of a query for QTYPE=A or QTYPE=AAAA to a responder
+       that is known from the cache to be capable uses QTYPE=ADDR to
+       send the upstream query.
+
+   3.  If the capabilities of the responder are not known from the
+       cache, the initiator sends both QTYPE=A and QTYPE=AAAA and, in
+       parallel, QTYPE=ADDR.  If all three queries generate responses
+       and the responses are compatible, the initiator adds the
+       responder address and a timestamp to the cache.
+
+   4.  A responder included in the cache with a timestamp that is too
+       old to be considered current will no longer be considered
+       current, and the discovery mechanism should be repeated.  The
+
+
+
+Abley                     Expires 12 April 2024                 [Page 4]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
+
+       threshold beyond which an entry should no longer be considered
+       current is a matter of local policy, and may be refined over time
+       following observation of caches in real-world operation.
+
+   Nameservers (responders) are often provisioned in a distributed
+   manner, e.g.  using anycast [RFC4786] where multiple, autonomous
+   origin servers handle queries equivalently using the same nameserver
+   address.  Where such nameservers are configured to support queries
+   with QTYPE=ADDR, it should be ensured that all origin servers
+   associated with the same nameserver address provide consistent
+   support.
 
 3.5.  Example
 
@@ -209,22 +249,6 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
    specification.
 
 3.5.1.  Query and Response for (EXAMPLE.COM, IN, A)
-
-
-
-
-
-
-
-
-
-
-
-
-Abley                     Expires 12 April 2024                 [Page 4]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
 
    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM A
      +multiline +dnssec +norec
@@ -248,6 +272,16 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 3.5.2.  Query and Response for (EXAMPLE.COM, IN, AAAA)
 
+
+
+
+
+
+Abley                     Expires 12 April 2024                 [Page 5]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
+
    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM AAAA
      +multiline +dnssec +norec
    ; (1 server found)
@@ -269,18 +303,6 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
 3.5.3.  Query and Response for (EXAMPLE.COM, IN, ADDR)
-
-
-
-
-
-
-
-
-Abley                     Expires 12 April 2024                 [Page 5]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
 
    ; <<>> DiG 9.10.6 <<>> @A.IANA-SERVERS.NET EXAMPLE.COM ADDR
      +multiline +dnssec +norec
@@ -307,6 +329,15 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
                         IbunZHqZyc6umaDr0zsam9+hR/wSGm6BqHARrdCi58hf
                         Bi0tbzRFV+mOsdlUl8nyNqvfDg6tn/NIBgsUjg6vZg== )
 
+
+
+
+
+Abley                     Expires 12 April 2024                 [Page 6]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
+
 4.  Security Considerations
 
    This specification describes a new meta QTYPE which causes DNS
@@ -329,24 +360,16 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
    owner name, in practice the total size of such RRSETS is dramatically
    smaller than the zone apex example alluded to above.
 
-
-
-
-
-Abley                     Expires 12 April 2024                 [Page 6]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
-
    A nameserver operator that is concerned about the amplification
    potential of this specification can simply choose not to implement
    it.
 
 5.  IANA Considerations
 
-   The IANA has allocated the code point TBA1 for QTYPE ADDR and
-   recorded it in the Resource Record (RR) TYPEs sub-registry of the DNS
-   Parameters registry as follows:
+   The IANA has allocated the code point TBA1 for QTYPE ADDR from the
+   range of available code-points designated for use by "Q and Meta-
+   TYPEs" [RFC6895] and recorded it in the Resource Record (RR) TYPEs
+   sub-registry of the DNS Parameters registry as follows:
 
    +======+=======+===============+===============+===================+
    | TYPE | Value | Reference     | Template      | Registration Date |
@@ -361,31 +384,8 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 6.  Template
 
-   The following template was submitted to request support of RRTYPE
-   TBA1 as described in this document.
-
-   A.  Submission Date: (date of this document)
-
-   B.1 Submission Type: [X] New RRTYPE [ ] Modification to RRTYPE B.2
-   Kind of RR: [ ] Data RR [X] Meta-RR
-
-   Assignment of a QTYPE from the range of code-points reserved for "Q
-   and Meta-TYPEs" is requested; see [RFC6895] section 3.1.1.
-
-   C.  Contact Information for submitter (will be publicly posted):
-
-   The author contact information for this document may be used as the
-   contact information for this template.
-
-   D.  Motivation for the new RRTYPE application Please keep this part
-   at a high level to inform the Expert and reviewers about uses of the
-   RRTYPE.  Most reviewers will be DNS experts that may have limited
-   knowledge of your application space.
-
-   See Section 1.
-
-
-
+   The following template was submitted to request assignment of a code-
+   point for the ADDR RRTYPE as described in this document.
 
 
 
@@ -394,53 +394,53 @@ Abley                     Expires 12 April 2024                 [Page 7]
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
 
-   E.  Description of the proposed RR type.  This description can be
-   provided in-line in the template, as an attachment, or with a
-   publicly available URL.
+   A. Submission Date:  (date of this document)
 
-   See Section 3.
+   B.1 Submission Type:  [X] New RRTYPE  [ ] Modification to RRTYPE
+   B.2 Kind of RR:  [ ] Data RR  [X]  Meta-RR
 
-   F.  What existing RRTYPE or RRTYPEs come closest to filling that need
-   and why are they unsatisfactory?
+      Assignment of a QTYPE from the range of code-points reserved
+      for "Q and Meta-TYPEs" is requested; see RFC6895 section
+      3.1.1.
 
-   The RRTYPEs A and AAAA provide a means of publishing IPv4 and IPv6
-   addresses in the DNS.  However, in order to obtain all IPv4 and IPv6
-   addresses for a particular owner name, two queries are required.
-   This specification allows the same functionality with a single query.
+   C. Contact Information for submitter (will be publicly posted):
 
-   The RRTYPE ANY (referred to as * in [RFC1035] provide a means of
-   obtaining all RRTYPEs associated with a single owner name in a single
-   query.  However, queries with QTYPE=ANY provide unacceptable
-   amplification potential for some operators and in many cases their
-   use has been curtailed, e.g. see [RFC8482].
+      The author contact information for this document may be used
+      as the contact information for this template.
 
-   G.  What mnemonic is requested for the new RRTYPE (optional)?
+   D. Motivation for the new RRTYPE application
+      Please keep this part at a high level to inform the Expert
+      and reviewers about uses of the RRTYPE.  Most reviewers will
+      be DNS experts that may have limited knowledge of your
+      application space.
 
-   ADDR
+      See (this document).
 
-   H.  Does the requested RRTYPE make use of any existing IANA registry
-   or require the creation of a new IANA subregistry in DNS Parameters?
-   If so, please indicate which registry is to be used or created.  If a
-   new subregistry is needed, specify the allocation policy for it and
-   its initial contents.  Also include what the modification procedures
-   will be.
+   E. Description of the proposed RR type.
+      This description can be provided in-line in the template,
+      as an attachment, or with a publicly available URL.
 
-   No.
+      See (this document).
 
-   I.  Does the proposal require/expect any changes in DNS servers/
-   resolvers that prevent the new type from being processed as an
-   unknown RRTYPE (see [RFC3597]?
+   F. What existing RRTYPE or RRTYPEs come closest to filling that need
+      and why are they unsatisfactory?
 
-   Yes.
+      The RRTYPEs A and AAAA provide a means of publishing IPv4
+      and IPv6 addresses in the DNS. However, in order to obtain
+      all IPv4 and IPv6 addresses for a particular owner name, two
+      queries are required.  This specification allows the same
+      functionality with a single query.
 
-7.  Acknowledgements
+      The RRTYPE ANY (referred to as * in RFC 1035) provides a
+      means of obtaining all RRTYPEs associated with a single owner
+      name in a single query. However, queries with QTYPE=ANY
+      provide unacceptable amplification potential for some operators
+      and in many cases their use has been curtailed, e.g. see
+      RFC 8482.
 
-   An early implementation of this mechanism was implemented at
-   Cloudflare by XXXNAMES in XXDATE.
+   G. What mnemonic is requested for the new RRTYPE (optional)?
 
-8.  References
-
-8.1.  Normative References
+      ADDR
 
 
 
@@ -449,6 +449,36 @@ Abley                     Expires 12 April 2024                 [Page 8]
 
 Internet-Draft         The ADDR Pseudo Query Type           October 2023
 
+
+   H. Does the requested RRTYPE make use of any existing IANA registry
+      or require the creation of a new IANA subregistry in DNS
+      Parameters?  If so, please indicate which registry is to be
+      used or created.  If a new subregistry is needed, specify
+      the allocation policy for it and its initial contents.  Also
+      include what the modification procedures will be.
+
+      No.
+
+   I. Does the proposal require/expect any changes in DNS
+      servers/resolvers that prevent the new type from being
+      processed as an unknown RRTYPE (see RFC3597)?
+
+      No.
+
+7.  Acknowledgements
+
+   This is not the first attempt to specify some kind of multi-QTYPEs
+   functionality.  The bravery and foolish optimism of all those that
+   came before is hereby acknowledged.
+
+   An early implementation of this mechanism was implemented in
+   authoritative-only DNS servers by Olafur Gudmundsson, Christian
+   Elmerot and Pavel Odintsov at Cloudflare in 2016, using the private-
+   use code-point 65535 for ADDR.
+
+8.  References
+
+8.1.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
@@ -463,13 +493,18 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3597]  Gustafsson, A., "Handling of Unknown DNS Resource Record
-              (RR) Types", RFC 3597, DOI 10.17487/RFC3597, September
-              2003, <https://www.rfc-editor.org/info/rfc3597>.
-
    [RFC6895]  Eastlake 3rd, D., "Domain Name System (DNS) IANA
               Considerations", BCP 42, RFC 6895, DOI 10.17487/RFC6895,
               April 2013, <https://www.rfc-editor.org/info/rfc6895>.
+
+
+
+
+
+Abley                     Expires 12 April 2024                 [Page 9]
+
+Internet-Draft         The ADDR Pseudo Query Type           October 2023
+
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -498,14 +533,6 @@ Internet-Draft         The ADDR Pseudo Query Type           October 2023
               Have QTYPE=ANY", RFC 8482, DOI 10.17487/RFC8482, January
               2019, <https://www.rfc-editor.org/info/rfc8482>.
 
-
-
-
-Abley                     Expires 12 April 2024                 [Page 9]
-
-Internet-Draft         The ADDR Pseudo Query Type           October 2023
-
-
 Author's Address
 
    Joe Abley
@@ -514,33 +541,6 @@ Author's Address
    Netherlands
    Phone: +31 6 45 56 36 34
    Email: jabley@cloudflare.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
